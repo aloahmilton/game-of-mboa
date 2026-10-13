@@ -1,34 +1,34 @@
 # Deploy Game of Mboa
 
-## 1. Landing page (apps/web) on Vercel
+## Deploy the GAME CLIENT (recommended first playable URL)
 
-**Important:** In Vercel project settings set:
+### Vercel settings
+1. Project Settings → General → **Root Directory** = `apps/client`
+2. Build & Development Settings → **clear Overrides** or set:
+   - Install Command: `npm install`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+3. Environment variable (optional until server is online):
+   - `VITE_COLYSEUS_URL` = your Colyseus server URL (e.g. `wss://your-server.railway.app`)
+4. Redeploy
 
-- **Root Directory** = `apps/web`
-- Framework = Vite
-- Install Command = `npm install` (or leave default)
-- Build Command = `npm run build`
-- Output Directory = `dist`
+Important: Do **not** leave Install Command as `cd apps/web && ...` when Root Directory is already `apps/client` or `apps/web`.
 
-Do **not** install from the monorepo root with pnpm for the first deploy — that caused the ERR_INVALID_THIS errors.
+## Deploy the LANDING page
 
-### Steps
-1. Vercel → New Project → Import `aloahmilton/game-of-mboa`
-2. Before deploy, click **Root Directory** → Edit → `apps/web`
-3. Deploy
+Root Directory = `apps/web`  
+Install = `npm install`  
+Build = `npm run build`  
+Output = `dist`
 
-The landing page does not need the server or client packages.
+## Deploy the SERVER
 
-## 2. Game client (later)
-Deploy `apps/client` as a separate Vercel project with Root Directory `apps/client`.
+Colyseus needs a long-running process → Railway, Render, or Fly.io (not Vercel serverless).
 
-## 3. Server (later)
-Deploy `apps/server` on Railway / Render / Fly.io (needs a long-running Node process).
-
-## Local run
 ```bash
-pnpm install
-cd apps/server && pnpm dev   # terminal 1
-cd apps/client && pnpm dev   # terminal 2
-cd apps/web && pnpm dev      # optional landing
+cd apps/server
+npm install
+npm run dev
 ```
+
+Set `PORT` env var. Point client `VITE_COLYSEUS_URL` to that host.
