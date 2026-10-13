@@ -1,0 +1,22 @@
+{
+  "name": "game-of-mboa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Game of Mboa – Live your Cameroon story. Free multiplayer life-sim set in virtual Cameroon.",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.0",
+    "prettier": "^3.3.0"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20"
+  }
+}
