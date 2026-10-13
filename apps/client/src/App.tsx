@@ -3,6 +3,7 @@ import { ColyseusClient } from './game/network/ColyseusClient';
 import { createGame } from './game/main';
 import { HUD } from './components/HUD';
 import { ActivityBar } from './components/ActivityBar';
+import { ChatPanel } from './components/ChatPanel';
 
 type Screen = 'menu' | 'game';
 
@@ -107,6 +108,10 @@ export default function App() {
     networkRef.current?.sendActivity(activityId);
   };
 
+  const handleChat = (text: string) => {
+    networkRef.current?.sendChat(text);
+  };
+
   if (screen === 'menu') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-mboa-night to-mboa-green p-4">
@@ -171,6 +176,7 @@ export default function App() {
       <div id="game-container" className="absolute inset-0" />
       <HUD money={money} district={district} needs={needs} />
       <ActivityBar onActivity={handleActivity} />
+      <ChatPanel onSend={handleChat} />
       {notification && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-black/80 text-white text-sm px-4 py-2 rounded-lg border border-white/20">
           {notification}
