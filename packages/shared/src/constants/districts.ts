@@ -1,0 +1,61 @@
+import { District } from '../types/District';
+
+export const DISTRICTS: Record<string, District> = {
+  akwa: {
+    id: 'akwa',
+    name: 'Akwa',
+    displayName: 'Akwa',
+    description: 'The beating heart of Douala nightlife and commerce.',
+    vibe: 'Party & Hustle',
+    availableJobs: ['market-seller', 'content-creator', 'club-worker'],
+    availableActivities: ['eat', 'drink', 'dance', 'maquis', 'shop'],
+    spawnPoints: [{ x: 400, y: 300 }, { x: 450, y: 320 }],
+    isUnlockedByDefault: true,
+  },
+  bonanjo: {
+    id: 'bonanjo',
+    name: 'Bonanjo',
+    displayName: 'Bonanjo',
+    description: 'Administrative and elite district. Clean streets, big status.',
+    vibe: 'Big Man / Connecte',
+    availableJobs: ['office-worker', 'businessman'],
+    availableActivities: ['eat', 'drink', 'work', 'rest'],
+    spawnPoints: [{ x: 200, y: 200 }],
+    isUnlockedByDefault: true,
+  },
+  'new-bell': {
+    id: 'new-bell',
+    name: 'New Bell',
+    displayName: 'New Bell',
+    description: 'Popular, chaotic and authentic. Real street life.',
+    vibe: 'Street / Authentic',
+    availableJobs: ['taxi-moto', 'market-seller', 'street-vendor'],
+    availableActivities: ['eat', 'drink', 'maquis', 'street-football'],
+    spawnPoints: [{ x: 600, y: 400 }],
+    isUnlockedByDefault: true,
+  },
+  bepanda: {
+    id: 'bepanda',
+    name: 'Bepanda',
+    displayName: 'Bepanda',
+    description: 'Energetic popular quarter full of young energy.',
+    vibe: 'Youth Energy',
+    availableJobs: ['taxi-moto', 'content-creator'],
+    availableActivities: ['eat', 'drink', 'maquis', 'dance'],
+    spawnPoints: [{ x: 500, y: 500 }],
+    isUnlockedByDefault: true,
+  },
+  bonapriso: {
+    id: 'bonapriso',
+    name: 'Bonapriso',
+    displayName: 'Bonapriso',
+    description: 'Upscale residential area. Comfort and status.',
+    vibe: 'Comfort & Status',
+    availableJobs: ['office-worker'],
+    availableActivities: ['eat', 'rest', 'shop'],
+    spawnPoints: [{ x: 300, y: 150 }],
+    isUnlockedByDefault: false,
+  },
+};
+
+export const DEFAULT_DISTRICT_ID = 'akwa';

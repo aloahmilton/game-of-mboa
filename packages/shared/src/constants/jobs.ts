@@ -1,0 +1,52 @@
+import { Job } from '../types/Activity';
+
+export const JOBS: Record<string, Job> = {
+  'taxi-moto': {
+    id: 'taxi-moto',
+    name: 'Taxi-moto',
+    nameFr: 'Taxi-moto',
+    basePay: 3500,
+    energyCost: 25,
+    durationMinutes: 15,
+    requiredDistricts: ['new-bell', 'bepanda', 'akwa'],
+    description: 'Drive people around Douala on a motorbike. Classic hustle.',
+  },
+  'market-seller': {
+    id: 'market-seller',
+    name: 'Market Seller',
+    nameFr: 'Vendeur au marche',
+    basePay: 2800,
+    energyCost: 20,
+    durationMinutes: 20,
+    requiredDistricts: ['new-bell', 'akwa'],
+    description: 'Sell goods at the market. Talk, bargain, survive.',
+  },
+  'office-worker': {
+    id: 'office-worker',
+    name: 'Office Worker',
+    nameFr: 'Employe de bureau',
+    basePay: 5000,
+    energyCost: 15,
+    durationMinutes: 30,
+    requiredDistricts: ['bonanjo', 'bonapriso'],
+    description: 'Sit in an office, do some work, collect salary.',
+  },
+  'content-creator': {
+    id: 'content-creator',
+    name: 'Content Creator',
+    nameFr: 'Createur de contenu',
+    basePay: 4000,
+    energyCost: 18,
+    durationMinutes: 25,
+    description: 'Make videos, post on social media, chase views.',
+  },
+  'footballer': {
+    id: 'footballer',
+    name: 'Footballer',
+    nameFr: 'Footballeur',
+    basePay: 4500,
+    energyCost: 30,
+    durationMinutes: 20,
+    description: 'Train and play. Dream of the Indomitable Lions.',
+  },
+};
