@@ -4,6 +4,8 @@ import { createGame } from './game/main';
 import { HUD } from './components/HUD';
 import { ActivityBar } from './components/ActivityBar';
 import { ChatPanel } from './components/ChatPanel';
+import { SkipAuthRequest } from './components/SkipAuthRequest';
+import { GAME } from '@mboa/shared';
 
 type Screen = 'menu' | 'game';
 
@@ -14,6 +16,35 @@ interface LiveNeeds {
   social: number;
   hygiene: number;
 }
+
+/** Lightweight stand-in when server is skipped — no Colyseus room. */
+function createOfflineNetwork(username: string, startingClass: 'connecte' | 'debrouillard') {
+  return {
+    room: null as null,
+    sessionId: 'offline-local',
+    playerId: 'offline-local',
+    offline: true as const,
+    offlineMeta: {
+      username: username.trim() || 'Solo',
+      startingClass,
+      money: GAME.STARTING_MONEY[startingClass],
+      districtId: GAME.DEFAULT_DISTRICT,
+      needs: { ...GAME.STARTING_NEEDS },
+    },
+    sendInput: (_input: unknown) => {},
+    sendChat: (_text: string) => {},
+    sendActivity: (activityId: string) => {
+      window.dispatchEvent(
+        new CustomEvent('mboa:activity-result', {
+          detail: { message: `Offline: ${activityId} (local only)`, activityId },
+        })
+      );
+    },
+    leave: () => {},
+  };
+}
+
+export type GameNetwork = ColyseusClient | ReturnType<typeof createOfflineNetwork>;
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('menu');
@@ -30,9 +61,20 @@ export default function App() {
     hygiene: 85,
   });
   const [notification, setNotification] = useState('');
+  const [offlineMode, setOfflineMode] = useState(false);
 
   const gameRef = useRef<Phaser.Game | null>(null);
-  const networkRef = useRef<ColyseusClient | null>(null);
+  const networkRef = useRef<GameNetwork | null>(null);
+
+  const launchGame = (network: GameNetwork) => {
+    networkRef.current = network;
+    setScreen('game');
+    setStatus('');
+    setTimeout(() => {
+      if (gameRef.current) gameRef.current.destroy(true);
+      gameRef.current = createGame('game-container', network);
+    }, 50);
+  };
 
   const startGame = async () => {
     if (!username.trim()) {
@@ -47,7 +89,7 @@ export default function App() {
         username: username.trim(),
         startingClass,
       });
-      networkRef.current = network;
+      setOfflineMode(false);
 
       if (network.room) {
         const syncLocal = () => {
@@ -70,17 +112,24 @@ export default function App() {
         network.room.onMessage('welcome', () => setTimeout(syncLocal, 100));
       }
 
-      setScreen('game');
-      setStatus('');
-
-      setTimeout(() => {
-        if (gameRef.current) gameRef.current.destroy(true);
-        gameRef.current = createGame('game-container', network);
-      }, 50);
+      launchGame(network);
     } catch (err: any) {
       console.error(err);
-      setStatus('Could not connect. Start the server first (apps/server).');
+      setStatus('Could not connect. Start the server first (apps/server) — or use Skip auth.');
     }
+  };
+
+  /** Solo play: no Colyseus, no auth, local movement only. */
+  const skipAuthAndPlay = () => {
+    const name = username.trim() || 'Solo';
+    const network = createOfflineNetwork(name, startingClass);
+    setOfflineMode(true);
+    setMoney(network.offlineMeta.money);
+    setDistrict('Akwa');
+    setNeeds({ ...network.offlineMeta.needs });
+    setNotification('Offline mode — no server');
+    setTimeout(() => setNotification(''), 2500);
+    launchGame(network);
   };
 
   useEffect(() => {
@@ -109,6 +158,11 @@ export default function App() {
   };
 
   const handleChat = (text: string) => {
+    if (offlineMode) {
+      setNotification('Chat needs multiplayer (server)');
+      setTimeout(() => setNotification(''), 2000);
+      return;
+    }
     networkRef.current?.sendChat(text);
   };
 
@@ -164,6 +218,8 @@ export default function App() {
           >
             Enter Mboa
           </button>
+
+          <SkipAuthRequest onSkip={skipAuthAndPlay} />
 
           {status && <p className="text-center text-sm mt-4 text-red-300">{status}</p>}
         </div>
