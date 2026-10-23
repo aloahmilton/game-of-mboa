@@ -1,0 +1,28 @@
+import React from 'react';
+
+/**
+ * Dev / early-build helper: enter the world without server or auth.
+ * Remove or hide behind import.meta.env.DEV before public launch.
+ */
+interface SkipAuthRequestProps {
+  onSkip: () => void;
+  disabled?: boolean;
+}
+
+export function SkipAuthRequest({ onSkip, disabled }: SkipAuthRequestProps) {
+  return (
+    <div className="mt-4 pt-4 border-t border-white/10">
+      <button
+        type="button"
+        onClick={onSkip}
+        disabled={disabled}
+        className="w-full py-2.5 rounded-lg border border-dashed border-white/30 text-white/80 text-sm font-medium hover:bg-white/10 hover:border-mboa-yellow/50 hover:text-white transition disabled:opacity-40"
+      >
+        Skip auth — play offline
+      </button>
+      <p className="text-center text-[11px] text-white/40 mt-2">
+        No server needed. Solo mode for building & testing.
+      </p>
+    </div>
+  );
+}
