@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 
 /**
- * Layered character visual (create-game-assets + Phaser game-objects pattern).
- * Procedural only — zero external assets, free stack.
- * Layers: shadow → shoes → legs → torso → arms → head → hair → name
+ * Top-down readable character (professional 2D RPG silhouette).
+ * Clear head/shoulders from above, strong shadow, limited palette.
+ * Procedural — zero external assets.
  */
 
 export type SkinTone = 'light' | 'medium' | 'dark' | 'deep';
@@ -43,51 +43,51 @@ export function createPlayerVisual(
   const isConnecte = data.startingClass === 'connecte';
   const shirt = isConnecte ? 0x1565c0 : 0xe65100;
   const pants = isConnecte ? 0x263238 : 0x3e2723;
-  const shoes = 0x212121;
+  const shoes = 0x1a1a1a;
 
-  const shadow = scene.add.ellipse(0, 22, 26, 10, 0x000000, 0.35);
+  const shadow = scene.add.ellipse(0, 10, 28, 12, 0x000000, 0.4);
   container.add(shadow);
 
-  const shoeL = scene.add.rectangle(-7, 20, 10, 6, shoes);
-  const shoeR = scene.add.rectangle(7, 20, 10, 6, shoes);
+  const shoeL = scene.add.rectangle(-6, 8, 9, 5, shoes);
+  const shoeR = scene.add.rectangle(6, 8, 9, 5, shoes);
   container.add([shoeL, shoeR]);
 
-  const legL = scene.add.rectangle(-6, 10, 8, 16, pants);
-  const legR = scene.add.rectangle(6, 10, 8, 16, pants);
+  const legL = scene.add.rectangle(-5, 2, 8, 10, pants);
+  const legR = scene.add.rectangle(5, 2, 8, 10, pants);
   container.add([legL, legR]);
 
-  const torso = scene.add.rectangle(0, -4, 22, 20, shirt);
-  torso.setStrokeStyle(1, 0x000000, 0.15);
+  const torso = scene.add.rectangle(0, -8, 24, 18, shirt);
+  torso.setStrokeStyle(1, 0x000000, 0.2);
   container.add(torso);
 
-  const armL = scene.add.rectangle(-14, -2, 6, 14, skin);
-  const armR = scene.add.rectangle(14, -2, 6, 14, skin);
+  const armL = scene.add.rectangle(-14, -6, 7, 12, skin);
+  const armR = scene.add.rectangle(14, -6, 7, 12, skin);
   container.add([armL, armR]);
 
-  const head = scene.add.circle(0, -26, 12, skin);
-  head.setStrokeStyle(1, 0x000000, 0.12);
+  const head = scene.add.circle(0, -24, 11, skin);
+  head.setStrokeStyle(1, 0x000000, 0.15);
   container.add(head);
 
-  const eyeL = scene.add.circle(-4, -27, 2, 0x1a1a1a);
-  const eyeR = scene.add.circle(4, -27, 2, 0x1a1a1a);
+  const eyeL = scene.add.circle(-4, -25, 2, 0x111111);
+  const eyeR = scene.add.circle(4, -25, 2, 0x111111);
   container.add([eyeL, eyeR]);
 
   addHair(scene, container, data.hairStyle || 'fade', hairColor);
 
   const nameTag = scene.add
-    .text(0, -48, data.username || 'Player', {
+    .text(0, -42, data.username || 'Player', {
       fontSize: '11px',
-      fontFamily: 'Inter, system-ui, sans-serif',
+      fontFamily: 'system-ui, sans-serif',
       color: '#ffffff',
-      backgroundColor: '#000000aa',
+      backgroundColor: '#000000cc',
       padding: { x: 5, y: 2 },
     })
     .setOrigin(0.5);
   container.add(nameTag);
 
   if (data.isLocal) {
-    const ring = scene.add.circle(0, 0, 28, 0xffffff, 0);
-    ring.setStrokeStyle(2, 0xf9a825, 0.7);
+    const ring = scene.add.ellipse(0, 10, 34, 14, 0xf9a825, 0);
+    ring.setStrokeStyle(2, 0xf9a825, 0.85);
     container.add(ring);
   }
 
@@ -106,31 +106,25 @@ function addHair(
 ) {
   switch (style) {
     case 'afro': {
-      const afro = scene.add.circle(0, -34, 14, color);
-      container.add(afro);
+      container.add(scene.add.circle(0, -32, 13, color));
       break;
     }
     case 'braids': {
-      const top = scene.add.ellipse(0, -34, 20, 10, color);
-      const b1 = scene.add.rectangle(-8, -28, 4, 10, color);
-      const b2 = scene.add.rectangle(0, -28, 4, 10, color);
-      const b3 = scene.add.rectangle(8, -28, 4, 10, color);
-      container.add([top, b1, b2, b3]);
+      container.add(scene.add.ellipse(0, -32, 18, 9, color));
+      container.add(scene.add.rectangle(-7, -26, 3, 9, color));
+      container.add(scene.add.rectangle(0, -26, 3, 9, color));
+      container.add(scene.add.rectangle(7, -26, 3, 9, color));
       break;
     }
     case 'bald':
       break;
-    case 'short':
-    case 'fade':
     default: {
-      const cap = scene.add.ellipse(0, -34, 22, 12, color);
-      container.add(cap);
+      container.add(scene.add.ellipse(0, -32, 20, 11, color));
       break;
     }
   }
 }
 
-/** Subtle walk bob while moving — only Y scale so facing (flipX) stays intact */
 export function applyWalkBob(
   container: Phaser.GameObjects.Container,
   isMoving: boolean,
@@ -141,6 +135,6 @@ export function applyWalkBob(
     container.setScale(sx, 1);
     return;
   }
-  const bob = 1 + Math.sin(time / 80) * 0.035;
+  const bob = 1 + Math.sin(time / 90) * 0.04;
   container.setScale(sx, bob);
 }
